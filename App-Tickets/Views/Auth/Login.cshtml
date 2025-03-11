@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Iniciar Sesión</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <label>Correo</label>
+        <input type="email" name="correo" class="form-control" required />
+    </div>
+
+    <div>
+        <label>Contraseña</label>
+        <input type="password" name="contraseña" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Ingresar</button>
+}
+
+@if (ViewBag.Mensaje != null)
+{
+    <p class="text-danger">@ViewBag.Mensaje</p>
+}
