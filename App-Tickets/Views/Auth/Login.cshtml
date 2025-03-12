@@ -4,27 +4,25 @@
 
 <h2>Iniciar Sesión</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Login", "Auth", FormMethod.Post))
 {
     <div>
         <label>Correo</label>
-        <input type="email" name="correo" class="form-control" required />
+        <input type="email" name="Correo" class="form-control" required />
     </div>
 
     <div>
         <label>Contraseña</label>
-        <input type="password" name="contraseña" class="form-control" required />
+        <input type="password" name="Contraseña" class="form-control" required />
     </div>
+
+    <br>
+    <button type="submit" class="btn btn-primary">Ingresar</button>
 }
 
-    <p>¿No tienes usuario? <a href="@Url.Action("Registro", "Auth")">Regístrate aquí</a>
+<p>¿No tienes usuario? <a href="@Url.Action("Registro", "Auth")">Regístrate aquí</a></p>
 
-        <br>
-        <button type="submit" class="btn btn-primary">Ingresar</button>
-        
-
-        @if (ViewBag.Mensaje != null)
-         {
-        <p class="text-danger">@ViewBag.Mensaje</p>
-         }
-        
+@if (ViewBag.Mensaje != null)
+{
+    <p class="text-danger">@ViewBag.Mensaje</p>
+}

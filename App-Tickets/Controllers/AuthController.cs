@@ -14,7 +14,7 @@ namespace App_Tickets.Controllers
 
     public class AuthController : Controller
     {
-        /*
+        
         private ApplicationDbContext db = new ApplicationDbContext();
 
         
@@ -60,8 +60,55 @@ namespace App_Tickets.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult Login(string correo, string contraseña)
+        {
+            Usuario usuario = null;
 
-        // POST: /Auth/Login
+            using (var context = new ApplicationDbContext())  // Manejo seguro de la conexión
+            {
+                context.Database.Connection.Open();  // Abrimos conexión
+
+                using (var cmd = context.Database.Connection.CreateCommand())
+                {
+                    cmd.CommandText = "EXEC sp_AutenticarUsuario @Email, @Contraseña";
+                    cmd.Parameters.Add(new SqlParameter("@Email", correo));
+                    cmd.Parameters.Add(new SqlParameter("@Contraseña", contraseña));
+
+                    using (var reader = cmd.ExecuteReader())  // Manejo seguro del reader
+                    {
+                        if (reader.Read()) // Si encuentra un usuario
+                        {
+                            usuario = new Usuario
+                            {
+                                Id = reader["ID_Usuario"].ToString(),
+                                Correo = reader["Email"].ToString(),
+                                Nombre = reader["Nombre"].ToString(),
+                                Password = reader["Password"].ToString(),
+                                PrimerApellido = reader["Primer_Apellido"].ToString(),
+                                SegundoApellido = reader["Segundo_Apellido"].ToString(),
+                                Rol = reader["Rol_Usuario"].ToString()
+                            };
+                        }
+                    }
+                }
+
+                context.Database.Connection.Close();  // Cerramos la conexión
+            }
+
+            if (usuario != null)
+            {
+                FormsAuthentication.SetAuthCookie(usuario.Correo, false);
+                return RedirectToAction("Tickets", "Auth");
+            }
+            else
+            {
+                ViewBag.Mensaje = "Correo o contraseña incorrectos.";
+                return View();
+            }
+        }
+
+        /*/ POST: /Auth/Login
         [HttpPost]
         public ActionResult Login(string correo, string contraseña)
         {
@@ -170,7 +217,7 @@ namespace App_Tickets.Controllers
                 return RedirectToAction("Login");
             }
             return View(ticket);
-        }
+        }*/
 
         public ActionResult DashboardAnalista()
         {
@@ -184,144 +231,144 @@ namespace App_Tickets.Controllers
         public ActionResult VistaSoporte()
         {
             return View();
-        }*/
 
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+            /*
+            private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Auth/Login
-        [AllowAnonymous]
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        // POST: /Auth/Login
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult Login(string correo, string contraseña)
-        {
-            try
+            // GET: /Auth/Login
+            [AllowAnonymous]
+            public ActionResult Login()
             {
-                // Validar que el correo y la contraseña no estén vacíos
-                if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(contraseña))
+                return View();
+            }
+
+            // POST: /Auth/Login
+            [HttpPost]
+            [AllowAnonymous]
+            public ActionResult Login(string correo, string contraseña)
+            {
+                try
                 {
-                    ViewBag.Mensaje = "El correo y la contraseña son requeridos.";
-                    return View();
-                }
-
-                Usuario usuario = null;
-
-                // Conectar a la base de datos y ejecutar el procedimiento almacenado
-                using (var context = new ApplicationDbContext())
-                {
-                    var cmd = context.Database.Connection.CreateCommand();
-                    cmd.CommandText = "EXEC sp_AutenticarUsuario @Email, @Contraseña";
-                    cmd.Parameters.Add(new SqlParameter("@Email", correo));
-                    cmd.Parameters.Add(new SqlParameter("@Contraseña", SecurityHelper.HashPassword(contraseña)));
-
-                    context.Database.Connection.Open();
-                    var reader = cmd.ExecuteReader();
-
-                    // Leer los datos del usuario si existe
-                    if (reader.Read())
+                    // Validar que el correo y la contraseña no estén vacíos
+                    if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(contraseña))
                     {
-                        usuario = new Usuario
+                        ViewBag.Mensaje = "El correo y la contraseña son requeridos.";
+                        return View();
+                    }
+
+                    Usuario usuario = null;
+
+                    // Conectar a la base de datos y ejecutar el procedimiento almacenado
+                    using (var context = new ApplicationDbContext())
+                    {
+                        var cmd = context.Database.Connection.CreateCommand();
+                        cmd.CommandText = "EXEC sp_AutenticarUsuario @Email, @Contraseña";
+                        cmd.Parameters.Add(new SqlParameter("@Email", correo));
+                        cmd.Parameters.Add(new SqlParameter("@Contraseña", SecurityHelper.HashPassword(contraseña)));
+
+                        context.Database.Connection.Open();
+                        var reader = cmd.ExecuteReader();
+
+                        // Leer los datos del usuario si existe
+                        if (reader.Read())
                         {
-                            Id = reader["ID_Usuario"].ToString(),
-                            Correo = reader["Email"].ToString(),
-                            Nombre = reader["Nombre"].ToString(),
-                            Password = reader["Password"].ToString(),
-                            PrimerApellido = reader["Primer_Apellido"].ToString(),
-                            SegundoApellido = reader["Segundo_Apellido"].ToString(),
-                            Rol = reader["Rol_Usuario"].ToString()
-                        };
+                            usuario = new Usuario
+                            {
+                                Id = reader["ID_Usuario"].ToString(),
+                                Correo = reader["Email"].ToString(),
+                                Nombre = reader["Nombre"].ToString(),
+                                Password = reader["Password"].ToString(),
+                                PrimerApellido = reader["Primer_Apellido"].ToString(),
+                                SegundoApellido = reader["Segundo_Apellido"].ToString(),
+                                Rol = reader["Rol_Usuario"].ToString()
+                            };
+                        }
+                        reader.Close(); // Cerrar el reader explícitamente
                     }
-                    reader.Close(); // Cerrar el reader explícitamente
-                }
 
-                // Verificar si el usuario existe
-                if (usuario != null)
-                {
-                    // Crear una cookie de autenticación
-                    FormsAuthentication.SetAuthCookie(usuario.Correo, false);
+                    // Verificar si el usuario existe
+                    if (usuario != null)
+                    {
+                        // Crear una cookie de autenticación
+                        FormsAuthentication.SetAuthCookie(usuario.Correo, false);
 
-                    // Redirigir según el rol del usuario
-                    if (usuario.Rol == "Soporte")
-                    {
-                        return RedirectToAction("DashboardSoporte", "Home");
-                    }
-                    else if (usuario.Rol == "Analista")
-                    {
-                        return RedirectToAction("DashboardAnalista", "Home");
+                        // Redirigir según el rol del usuario
+                        if (usuario.Rol == "Soporte")
+                        {
+                            return RedirectToAction("DashboardSoporte", "Home");
+                        }
+                        else if (usuario.Rol == "Analista")
+                        {
+                            return RedirectToAction("DashboardAnalista", "Home");
+                        }
+                        else
+                        {
+                            // Redirigir a una vista por defecto si el rol no está definido
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                     else
                     {
-                        // Redirigir a una vista por defecto si el rol no está definido
-                        return RedirectToAction("Index", "Home");
+                        // Mostrar un mensaje de error si las credenciales son incorrectas
+                        ViewBag.Mensaje = "Correo o contraseña incorrectos.";
+                        return View();
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Mostrar un mensaje de error si las credenciales son incorrectas
-                    ViewBag.Mensaje = "Correo o contraseña incorrectos.";
+                    // Logear el error (puedes usar un logger como NLog o Serilog)
+                    ViewBag.Mensaje = "Ocurrió un error durante el inicio de sesión. Por favor, inténtalo de nuevo.";
                     return View();
                 }
             }
-            catch (Exception ex)
+
+            // GET: /Auth/Registro
+            [AllowAnonymous]
+            public ActionResult Registro()
             {
-                // Logear el error (puedes usar un logger como NLog o Serilog)
-                ViewBag.Mensaje = "Ocurrió un error durante el inicio de sesión. Por favor, inténtalo de nuevo.";
                 return View();
             }
-        }
 
-        // GET: /Auth/Registro
-        [AllowAnonymous]
-        public ActionResult Registro()
-        {
-            return View();
-        }
-
-        // POST: /Auth/Registro
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult Registro(Usuario usuario)
-        {
-            if (ModelState.IsValid)
+            // POST: /Auth/Registro
+            [HttpPost]
+            [AllowAnonymous]
+            public ActionResult Registro(Usuario usuario)
             {
-                // Hashear la contraseña antes de guardarla
-                usuario.Password = SecurityHelper.HashPassword(usuario.Password);
-
-                using (var context = new ApplicationDbContext())
+                if (ModelState.IsValid)
                 {
-                    var cmd = context.Database.Connection.CreateCommand();
-                    cmd.CommandText = "EXEC sp_RegistrarUsuario @ID_Usuario, @Email, @Nombre, @Primer_Apellido, @Segundo_Apellido, @Contraseña, @Rol_Usuario";
+                    // Hashear la contraseña antes de guardarla
+                    usuario.Password = SecurityHelper.HashPassword(usuario.Password);
 
-                    cmd.Parameters.Add(new SqlParameter("@ID_Usuario", usuario.Id));
-                    cmd.Parameters.Add(new SqlParameter("@Email", usuario.Correo));
-                    cmd.Parameters.Add(new SqlParameter("@Nombre", usuario.Nombre));
-                    cmd.Parameters.Add(new SqlParameter("@Primer_Apellido", usuario.PrimerApellido));
-                    cmd.Parameters.Add(new SqlParameter("@Segundo_Apellido", usuario.SegundoApellido));
-                    cmd.Parameters.Add(new SqlParameter("@Contraseña", usuario.Password));
-                    cmd.Parameters.Add(new SqlParameter("@Rol_Usuario", usuario.Rol));
+                    using (var context = new ApplicationDbContext())
+                    {
+                        var cmd = context.Database.Connection.CreateCommand();
+                        cmd.CommandText = "EXEC sp_RegistrarUsuario @ID_Usuario, @Email, @Nombre, @Primer_Apellido, @Segundo_Apellido, @Contraseña, @Rol_Usuario";
 
-                    context.Database.Connection.Open();
-                    cmd.ExecuteNonQuery();
-                    context.Database.Connection.Close();
+                        cmd.Parameters.Add(new SqlParameter("@ID_Usuario", usuario.Id));
+                        cmd.Parameters.Add(new SqlParameter("@Email", usuario.Correo));
+                        cmd.Parameters.Add(new SqlParameter("@Nombre", usuario.Nombre));
+                        cmd.Parameters.Add(new SqlParameter("@Primer_Apellido", usuario.PrimerApellido));
+                        cmd.Parameters.Add(new SqlParameter("@Segundo_Apellido", usuario.SegundoApellido));
+                        cmd.Parameters.Add(new SqlParameter("@Contraseña", usuario.Password));
+                        cmd.Parameters.Add(new SqlParameter("@Rol_Usuario", usuario.Rol));
+
+                        context.Database.Connection.Open();
+                        cmd.ExecuteNonQuery();
+                        context.Database.Connection.Close();
+                    }
+
+                    return RedirectToAction("Login");
                 }
-
-                return RedirectToAction("Login");
+                return View(usuario);
             }
-            return View(usuario);
-        }
 
-        // Cerrar sesión
-        public ActionResult Logout()
-        {
-            FormsAuthentication.SignOut();
-            return RedirectToAction("Login");
+            // Cerrar sesión
+            public ActionResult Logout()
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Login");
+            */
         }
-
     }
 }
