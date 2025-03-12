@@ -10,6 +10,7 @@ namespace App_Tickets.Controllers
 {
     public static class SecurityHelper
     {
+        //est aclase autentica la conttaseña 
         public static string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -24,5 +25,7 @@ namespace App_Tickets.Controllers
             }
         }
     }
+    
+
         
 }
