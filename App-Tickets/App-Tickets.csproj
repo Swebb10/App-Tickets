@@ -141,6 +141,10 @@
     <Compile Include="Migrations\202503112125179_ActualizarBaseDatos.Designer.cs">
       <DependentUpon>202503112125179_ActualizarBaseDatos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202503120104022_ActualizarBaseDatos1.cs" />
+    <Compile Include="Migrations\202503120104022_ActualizarBaseDatos1.Designer.cs">
+      <DependentUpon>202503120104022_ActualizarBaseDatos1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Ticket.cs" />
@@ -244,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202503112125179_ActualizarBaseDatos.resx">
       <DependentUpon>202503112125179_ActualizarBaseDatos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202503120104022_ActualizarBaseDatos1.resx">
+      <DependentUpon>202503120104022_ActualizarBaseDatos1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

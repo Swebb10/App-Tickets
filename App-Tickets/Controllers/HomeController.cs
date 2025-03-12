@@ -28,18 +28,34 @@ namespace App_Tickets.Controllers
         }
 
         [Authorize]
+        [Authorize]
         public ActionResult DashboardSoporte()
         {
-            ViewBag.Mensaje = "Bienvenido al panel de Soporte.";
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.Mensaje = "Bienvenido al panel de Soporte.";
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         [Authorize]
         public ActionResult DashboardAnalista()
         {
-            ViewBag.Mensaje = "Bienvenido al panel de Analista.";
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.Mensaje = "Bienvenido al panel de Analista.";
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
+
 
     }
 }

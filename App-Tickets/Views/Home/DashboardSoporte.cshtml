@@ -1,5 +1,9 @@
 ﻿@{
     ViewBag.Title = "Dashboard Soporte";
+
 }
 <h2>@ViewBag.Mensaje</h2>
 <p>Este es el panel para usuarios de soporte.</p>
+
+<a href="@Url.Action("Index", "Tickets")" class="btn btn-primary">Gestionar Tickets</a>
+

@@ -52,12 +52,17 @@ namespace App_Tickets.Controllers
         [HttpPost]
         public ActionResult Login(string correo, string contraseña)
         {
-            // Encriptar la contraseña ingresada con SHA256
             string passwordEncriptada = HashPassword(contraseña);
 
             var usuario = db.Usuarios.FirstOrDefault(u => u.Correo == correo && u.Contraseña == passwordEncriptada);
             if (usuario != null)
             {
+                if (string.IsNullOrEmpty(usuario.Rol)) // Verifica que tenga un rol asignado
+                {
+                    ViewBag.Mensaje = "Error: No tienes un rol asignado.";
+                    return View();
+                }
+
                 FormsAuthentication.SetAuthCookie(usuario.Correo, false);
 
                 // Redirigir según el rol del usuario
@@ -80,6 +85,7 @@ namespace App_Tickets.Controllers
                 return View();
             }
         }
+
 
 
         // Cerrar sesión
