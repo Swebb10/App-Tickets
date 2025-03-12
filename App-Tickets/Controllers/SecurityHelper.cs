@@ -24,5 +24,5 @@ namespace App_Tickets.Controllers
             }
         }
     }
-    
+        
 }
