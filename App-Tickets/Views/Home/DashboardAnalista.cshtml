@@ -1,8 +1,73 @@
 ﻿@{
     ViewBag.Title = "Dashboard Analista";
 }
-<h2>@ViewBag.Mensaje</h2>
-<p>Este es el panel para analistas.</p>
 
-<a href="@Url.Action("Index", "Tickets")" class="btn btn-primary">Gestionar Tickets</a>
+<div class="container mt-4">
+    <h2>📋 Mis Tickets Asignados</h2>
 
+    <!-- Estadísticas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Tickets Resueltos</h5>
+                    <p class="card-text display-4">@ViewBag.TicketsResueltos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Tickets Pendientes</h5>
+                    <p class="card-text display-4">@ViewBag.TicketsPendientes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de tickets -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tema</th>
+                <th>Categoría</th>
+                <th>Urgencia</th>
+                <th>Importancia</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in Model)
+            {
+                <tr>
+                    <td>@ticket.Consecutivo</td>
+                    <td>@ticket.Tema</td>
+                    <td>@ticket.Categoria</td>
+                    <td>
+                        <span class="badge @(ticket.Urgencia == "Alta" ? "bg-danger" : ticket.Urgencia == "Media" ? "bg-warning" : "bg-success")">
+                            @ticket.Urgencia
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge @(ticket.Importancia == "Alta" ? "bg-danger" : ticket.Importancia == "Media" ? "bg-warning" : "bg-success")">
+                            @ticket.Importancia
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge @(ticket.Estado == "Resuelto" ? "bg-success" : "bg-primary")">
+                            @ticket.Estado
+                        </span>
+                    </td>
+                    <td>
+                        @if (ticket.Estado != "Resuelto")
+                        {
+                            <a href="@Url.Action("Documentar", "Tickets", new { id = ticket.Consecutivo })" class="btn btn-info btn-sm">Documentar Solución</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
