@@ -11,8 +11,10 @@ using System.Web.Security;
 
 namespace App_Tickets.Controllers
 {
+
     public class AuthController : Controller
     {
+
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [AllowAnonymous]
