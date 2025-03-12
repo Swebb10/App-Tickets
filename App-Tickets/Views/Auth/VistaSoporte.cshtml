@@ -1,0 +1,23 @@
+﻿@model App_Tickets.Models.Ticket
+
+@{
+    ViewBag.Title = "VistaSoporte";
+}
+
+<h2>VistaSoporte</h2>
+
+@using (Html.BeginForm())
+{
+
+    <div>
+        @Html.LabelFor(Soport => Soport.Id)
+        @Html.TextBoxFor(Soport => Soport.Id, new { @class = "form-control" })
+        @Html.ValidationMessageFor(Soport => Soport.Id)
+    </div>
+
+   // <br />
+   // <button type="submit" class="btn btn-primary">Generar Tickets</button>
+
+
+    <a href="@Url.Action("Auth", "Ticket")" class="btn btn-primary">Generar Tickets</a>
+}

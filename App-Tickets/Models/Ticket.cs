@@ -18,19 +18,19 @@ namespace App_Tickets.Models
         public string Asunto { get; set; }
 
         [Column("ID_Categoria")]
-        public int? CategoriaId { get; set; }
+        public int CategoriaId { get; set; }
         public virtual Categoria Categoria { get; set; }
 
         [Column("ID_NivelUrgencia")]
-        public int? UrgenciaId { get; set; }
+        public int UrgenciaId { get; set; }
         public virtual NivelUrgencia Urgencia { get; set; }
 
         [Column("ID_NivelImportancia")]
-        public int? ImportanciaId { get; set; }
+        public int ImportanciaId { get; set; }
         public virtual NivelImportancia Importancia { get; set; }
 
         [Column("ID_EstadoTicket")]
-        public int? EstadoId { get; set; }
+        public int EstadoId { get; set; }
         public virtual EstadoTicket Estado { get; set; }
 
         [Column("Creado_Por")]

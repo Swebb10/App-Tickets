@@ -1,0 +1,23 @@
+﻿@model App_Tickets.Models.Ticket
+
+
+@{
+    ViewBag.Title = "VistaAnalista";
+}
+
+<h2>VistaAnalista</h2>
+
+@using (Html.BeginForm())
+{
+
+    <div>
+        @Html.LabelFor(Analist => Analist.Id)
+        @Html.TextBoxFor(Analist => Analist.Id, new { @class = "form-control" })
+        @Html.ValidationMessageFor(Analist => Analist.Id)
+    </div>
+
+    //<br />
+   // <button type="submit" class="btn btn-primary">Generar Tickets</button>
+
+    <a href="@Url.Action("Auth", "Ticket")" class="btn btn-primary">Generar Tickets</a>
+}

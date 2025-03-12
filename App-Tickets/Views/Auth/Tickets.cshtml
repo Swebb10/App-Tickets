@@ -1,0 +1,53 @@
+﻿@model App_Tickets.Models.Ticket
+
+@{
+    ViewBag.Title = "Tickets";
+}
+
+<h2>Tickets</h2>
+
+@using (Html.BeginForm())
+{
+
+    <div>
+        @Html.LabelFor(ti => ti.Asunto)
+        @Html.TextBoxFor(m => m.Id, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Id)
+    </div>
+
+    <div>
+        @Html.LabelFor(ti => ti.CategoriaId)
+        @Html.DropDownListFor(ti => ti.CategoriaId, new SelectList(new[]
+        { "1. Hardware (Equipo fisico)", "2. Software (Sistemas o aplicaciones)" , "3. Red (Fallo en conexiones o servidor)" }),
+        "-- Selecciona una Categoria --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(ti => ti.CategoriaId)
+    </div>
+
+    <div>
+        @Html.LabelFor(ti => ti.UrgenciaId)
+        @Html.DropDownListFor(ti => ti.UrgenciaId, new SelectList(new[]
+        { "1. Baja", "2. Media " , "3. Alta" }),
+        "-- Selecciona el nivel de Urgencia --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(ti => ti.UrgenciaId)
+    </div>
+
+    <div>
+        @Html.LabelFor(ti => ti.ImportanciaId)
+        @Html.DropDownListFor(ti => ti.ImportanciaId, new SelectList(new[]
+        { "1. Baja", "2. Media " , "3. Alta" }),
+        "-- Selecciona el nivel de Importancia --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(ti => ti.ImportanciaId)
+    </div>
+
+    <div>
+        @Html.LabelFor(ti => ti.EstadoId)
+        @Html.DropDownListFor(ti => ti.EstadoId, new SelectList(new[]
+        { "1. Creado", "2. Pendiente" , "3. Resuelto" }),
+        "-- Selecciona una Categoria --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(ti => ti.EstadoId)
+    </div>
+
+
+    <br />
+    <button type="submit" class="btn btn-primary">Registrar</button>
+}

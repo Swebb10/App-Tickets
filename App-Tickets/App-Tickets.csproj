@@ -217,6 +217,9 @@
     <Content Include="Views\Tickets\Index.cshtml" />
     <Content Include="Views\Home\DashboardSoporte.cshtml" />
     <Content Include="Views\Home\DashboardAnalista.cshtml" />
+    <Content Include="Views\Auth\Tickets.cshtml" />
+    <Content Include="Views\Auth\VistaSoporte.cshtml" />
+    <Content Include="Views\Auth\VistaAnalista.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
