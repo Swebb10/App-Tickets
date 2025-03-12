@@ -9,10 +9,29 @@
 
 @using (Html.BeginForm())
 {
+
+    <div>
+        @Html.LabelFor(m => m.Id)
+        @Html.TextBoxFor(m => m.Id, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Id)
+    </div>
+
     <div>
         @Html.LabelFor(m => m.Nombre)
         @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.Nombre)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.PrimerApellido)
+        @Html.TextBoxFor(m => m.PrimerApellido, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.PrimerApellido)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.SegundoApellido)
+        @Html.TextBoxFor(m => m.SegundoApellido, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.SegundoApellido)
     </div>
 
     <div>
@@ -32,6 +51,7 @@
         @Html.DropDownListFor(m => m.Rol, new SelectList(new[] { "Soporte", "Analista" }), "-- Selecciona un Rol --", new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.Rol)
     </div>
+
     <br />
     <button type="submit" class="btn btn-primary">Registrar</button>
 }
