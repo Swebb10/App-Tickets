@@ -15,14 +15,17 @@
         <label>Contraseña</label>
         <input type="password" name="contraseña" class="form-control" required />
     </div>
-    
-
-    <p>¿No tienes usuario? <a href="@Url.Action("Registro", "Auth")">Regístrate aquí</a></p>
-    
-    <button type="submit" class="btn btn-primary">Ingresar</button>
 }
 
-@if (ViewBag.Mensaje != null)
-{
-    <p class="text-danger">@ViewBag.Mensaje</p>
-}
+
+    <p>¿No tienes usuario? <a href="@Url.Action("Registro", "Auth")">Regístrate aquí</a>
+
+        
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+        
+
+        @if (ViewBag.Mensaje != null)
+         {
+        <p class="text-danger">@ViewBag.Mensaje</p>
+         }
+        

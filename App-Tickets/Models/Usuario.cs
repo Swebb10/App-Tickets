@@ -1,27 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace App_Tickets.Models
 {
+    [Table("Usuarios")]
     public class Usuario
     {
         [Key]
-        public int Id { get; set; }
+        [Column("ID_Usuario")]
+        public string Id { get; set; }
+
+        [Required]
+        [Column("Email")]
+        public string Correo { get; set; }
 
         [Required]
         public string Nombre { get; set; }
 
         [Required]
-        [EmailAddress]
-        public string Correo { get; set; }
+        [Column("Primer_Apellido")]
+        public string PrimerApellido { get; set; }
 
         [Required]
-        public string Contraseña { get; set; }
+        [Column("Segundo_Apellido")]
+        public string SegundoApellido { get; set; }
 
         [Required]
-        public string Rol { get; set; } // "Soporte" o "Analista"
+        [Column("Contraseña")]
+        public string Password { get; set; }
+
+        [Required]
+        [Column("Rol_Usuario")]
+        public string Rol { get; set; }
     }
 }

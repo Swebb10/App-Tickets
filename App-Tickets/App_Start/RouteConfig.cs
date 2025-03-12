@@ -14,9 +14,9 @@ namespace App_Tickets
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Auth", action = "Login", id = UrlParameter.Optional }
+                name: "Registro",
+                url: "Auth/Registro",
+                defaults: new { controller = "Auth", action = "Registro" }
             );
         }
     }

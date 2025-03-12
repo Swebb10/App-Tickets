@@ -147,7 +147,13 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\Categoria.cs" />
+    <Compile Include="Models\EstadoTicket.cs" />
+    <Compile Include="Models\HistorialTicket.cs" />
+    <Compile Include="Models\NivelImportancia.cs" />
+    <Compile Include="Models\NivelUrgencia.cs" />
     <Compile Include="Models\Ticket.cs" />
+    <Compile Include="Models\TicketSolucionado.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

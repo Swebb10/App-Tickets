@@ -7,37 +7,40 @@ using System.Web;
 
 namespace App_Tickets.Models
 {
+    [Table("Tickets")]
     public class Ticket
     {
         [Key]
+        [Column("ID_Ticket")]
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
         public string Asunto { get; set; }
 
-        [Required]
-        public string Categoria { get; set; } // Ej: Hardware, Software, Red
+        [Column("ID_Categoria")]
+        public int? CategoriaId { get; set; }
+        public virtual Categoria Categoria { get; set; }
 
-        [Required]
-        public string Urgencia { get; set; } // Baja, Media, Alta
+        [Column("ID_NivelUrgencia")]
+        public int? UrgenciaId { get; set; }
+        public virtual NivelUrgencia Urgencia { get; set; }
 
-        [Required]
-        public string Importancia { get; set; } // Baja, Media, Alta
+        [Column("ID_NivelImportancia")]
+        public int? ImportanciaId { get; set; }
+        public virtual NivelImportancia Importancia { get; set; }
 
-        [Required]
-        public string Estado { get; set; } // Pendiente, Resuelto, Creado
+        [Column("ID_EstadoTicket")]
+        public int? EstadoId { get; set; }
+        public virtual EstadoTicket Estado { get; set; }
 
-        public DateTime FechaCreacion { get; set; } = DateTime.Now;
-
-        [Required]
-        public string AsignadoA { get; set; } // Correo del analista que atenderá el ticket
-
-        public string Solucion { get; set; } // Campo para documentar la solución del ticket
-
-        // Relación con el usuario que creó el ticket
-        [ForeignKey("Usuario")]
-        public int UsuarioId { get; set; }
+        [Column("Creado_Por")]
+        public string UsuarioId { get; set; }
         public virtual Usuario Usuario { get; set; }
+
+        [Column("Fecha_Creacion")]
+        public DateTime FechaCreacion { get; set; }
+
+        [Column("Ultima_Modificacion")]
+        public DateTime UltimaModificacion { get; set; }
     }
 }

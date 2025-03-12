@@ -1,6 +1,7 @@
 ﻿using App_Tickets.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,6 +15,7 @@ namespace App_Tickets.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        [AllowAnonymous]
         public ActionResult Registro()
         {
             return View();
@@ -21,22 +23,29 @@ namespace App_Tickets.Controllers
 
         // POST: /Auth/Registro
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Registro(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                // Verificar si el correo ya existe
-                if (db.Usuarios.Any(u => u.Correo == usuario.Correo))
+                using (var context = new ApplicationDbContext())
                 {
-                    ModelState.AddModelError("Correo", "El correo ya está registrado.");
-                    return View(usuario);
+                    var cmd = context.Database.Connection.CreateCommand();
+                    cmd.CommandText = "EXEC sp_RegistrarUsuario @ID_Usuario, @Email, @Nombre, @Primer_Apellido, @Segundo_Apellido, @Contraseña, @Rol_Usuario";
+
+                    cmd.Parameters.Add(new SqlParameter("@ID_Usuario", usuario.Id));
+                    cmd.Parameters.Add(new SqlParameter("@Email", usuario.Correo));
+                    cmd.Parameters.Add(new SqlParameter("@Nombre", usuario.Nombre));
+                    cmd.Parameters.Add(new SqlParameter("@Primer_Apellido", usuario.PrimerApellido));
+                    cmd.Parameters.Add(new SqlParameter("@Segundo_Apellido", usuario.SegundoApellido));
+                    cmd.Parameters.Add(new SqlParameter("@Contraseña", HashPassword(usuario.Password)));
+                    cmd.Parameters.Add(new SqlParameter("@Rol_Usuario", usuario.Rol));
+
+                    context.Database.Connection.Open();
+                    cmd.ExecuteNonQuery();
+                    context.Database.Connection.Close();
                 }
 
-                // Encriptar la contraseña antes de guardarla con SHA256
-                usuario.Contraseña = HashPassword(usuario.Contraseña);
-
-                db.Usuarios.Add(usuario);
-                db.SaveChanges();
                 return RedirectToAction("Login");
             }
             return View(usuario);
@@ -52,32 +61,38 @@ namespace App_Tickets.Controllers
         [HttpPost]
         public ActionResult Login(string correo, string contraseña)
         {
-            string passwordEncriptada = HashPassword(contraseña);
+            Usuario usuario = null;
+            using (var context = new ApplicationDbContext())
+            {
+                var cmd = context.Database.Connection.CreateCommand();
+                cmd.CommandText = "EXEC sp_AutenticarUsuario @Email, @Contraseña";
 
-            var usuario = db.Usuarios.FirstOrDefault(u => u.Correo == correo && u.Contraseña == passwordEncriptada);
+                cmd.Parameters.Add(new SqlParameter("@Email", correo));
+                cmd.Parameters.Add(new SqlParameter("@Contraseña", HashPassword(contraseña)));
+
+                context.Database.Connection.Open();
+                var reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    usuario = new Usuario
+                    {
+                        Id = reader["ID_Usuario"].ToString(),
+                        Correo = reader["Email"].ToString(),
+                        Nombre = reader["Nombre"].ToString(),
+                        PrimerApellido = reader["Primer_Apellido"].ToString(),
+                        SegundoApellido = reader["Segundo_Apellido"].ToString(),
+                        Rol = reader["Rol_Usuario"].ToString()
+                    };
+                }
+                reader.Close();
+                context.Database.Connection.Close();
+            }
+
             if (usuario != null)
             {
-                if (string.IsNullOrEmpty(usuario.Rol)) // Verifica que tenga un rol asignado
-                {
-                    ViewBag.Mensaje = "Error: No tienes un rol asignado.";
-                    return View();
-                }
-
                 FormsAuthentication.SetAuthCookie(usuario.Correo, false);
-
-                // Redirigir según el rol del usuario
-                if (usuario.Rol == "Soporte")
-                {
-                    return RedirectToAction("DashboardSoporte", "Home");
-                }
-                else if (usuario.Rol == "Analista")
-                {
-                    return RedirectToAction("DashboardAnalista", "Home");
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                return usuario.Rol == "Soporte" ? RedirectToAction("DashboardSoporte", "Home") : RedirectToAction("DashboardAnalista", "Home");
             }
             else
             {
@@ -85,8 +100,6 @@ namespace App_Tickets.Controllers
                 return View();
             }
         }
-
-
 
         // Cerrar sesión
         public ActionResult Logout()
