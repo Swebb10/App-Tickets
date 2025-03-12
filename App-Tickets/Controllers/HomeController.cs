@@ -27,12 +27,14 @@ namespace App_Tickets.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult DashboardSoporte()
         {
             ViewBag.Mensaje = "Bienvenido al panel de Soporte.";
             return View();
         }
 
+        [Authorize]
         public ActionResult DashboardAnalista()
         {
             ViewBag.Mensaje = "Bienvenido al panel de Analista.";

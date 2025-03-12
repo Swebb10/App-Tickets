@@ -10,6 +10,7 @@ using App_Tickets.Models;
 
 namespace App_Tickets.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
