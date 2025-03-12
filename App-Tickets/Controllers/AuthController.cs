@@ -21,7 +21,7 @@ namespace App_Tickets.Controllers
             return View();
         }
 
-        // POST: /Auth/Registro
+        // POST: /Auth/Registro y sksdjksjdksdjksd
         [HttpPost]
         [AllowAnonymous]
         public ActionResult Registro(Usuario usuario)
