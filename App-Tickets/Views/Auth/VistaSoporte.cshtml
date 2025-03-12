@@ -1,23 +1,23 @@
 ﻿@model App_Tickets.Models.Ticket
-
 @{
-    ViewBag.Title = "VistaSoporte";
+    ViewBag.Title = "Vista Soporte";
 }
 
-<h2>VistaSoporte</h2>
+<h2>Panel de Soporte</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("VistaSoporte", "Ticket", FormMethod.Get))
 {
-
-    <div>
-        @Html.LabelFor(Soport => Soport.Id)
-        @Html.TextBoxFor(Soport => Soport.Id, new { @class = "form-control" })
-        @Html.ValidationMessageFor(Soport => Soport.Id)
+    <div class="form-group">
+        @Html.Label("Ingrese su ID:")
+        @Html.TextBox("id", null, new { @class = "form-control" })
+        <br />
+        <button type="submit" class="btn btn-primary">Ver cantidad de tickets</button>
     </div>
+}
 
-   // <br />
-   // <button type="submit" class="btn btn-primary">Generar Tickets</button>
-
-
-    <a href="@Url.Action("Auth", "Ticket")" class="btn btn-primary">Generar Tickets</a>
+@if (ViewBag.IdSoporte != null)
+{
+    <hr />
+    <h3>Resumen del Día</h3>
+    <p>📌 Tickets registrados hoy: <strong>@ViewBag.TicketsHoy</strong></p>
 }

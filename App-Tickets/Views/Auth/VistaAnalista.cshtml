@@ -1,23 +1,54 @@
 ﻿@model App_Tickets.Models.Ticket
-
-
 @{
-    ViewBag.Title = "VistaAnalista";
+    ViewBag.Title = "Vista Analista";
 }
 
-<h2>VistaAnalista</h2>
+<h2>Panel de Analista</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("VistaAnalista", "Ticket", FormMethod.Get))
 {
-
-    <div>
-        @Html.LabelFor(Analist => Analist.Id)
-        @Html.TextBoxFor(Analist => Analist.Id, new { @class = "form-control" })
-        @Html.ValidationMessageFor(Analist => Analist.Id)
+    <div class="form-group">
+        @Html.Label("Ingrese su ID:")
+        @Html.TextBox("id", null, new { @class = "form-control" })
+        <br />
+        <button type="submit" class="btn btn-primary">Ver mis tickets</button>
     </div>
+}
 
-    //<br />
-   // <button type="submit" class="btn btn-primary">Generar Tickets</button>
+@if (ViewBag.Tickets != null)
+{
+    <hr />
+    <h3>Tickets Asignados</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Asunto</th>
+                <th>Estado</th>
+                <th>Fecha Creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in ViewBag.Tickets)
+            {
+                <tr>
+                    <td>@ticket.Id</td>
+                    <td>@ticket.Asunto</td>
+                    <td>@ticket.Estado.Nombre</td>
+                    <td>@ticket.FechaCreacion.ToShortDateString()</td>
+                    <td>
+                        <a href="@Url.Action("ExportarTicket", "Ticket", new { id = ticket.Id })" class="btn btn-secondary">
+                            📄 Exportar a TXT
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-    <a href="@Url.Action("Auth", "Ticket")" class="btn btn-primary">Generar Tickets</a>
+    <hr />
+    <h3>Estadísticas</h3>
+    <p>✅ Tickets Resueltos: <strong>@ViewBag.Resueltos</strong></p>
+    <p>⏳ Tickets Pendientes: <strong>@ViewBag.Pendientes</strong></p>
 }
